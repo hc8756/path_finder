@@ -1,0 +1,2 @@
+# PathFinder
+Pathfinding algorithms visualized 
