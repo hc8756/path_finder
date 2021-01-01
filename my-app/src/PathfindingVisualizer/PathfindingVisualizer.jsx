@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import Node from './Node/Node';
 import {dijkstra, getNodesInShortestPathOrder} from '../algorithms/dijkstra';
-
+import {astar, getNodesInShortestPathOrderA} from '../algorithms/astar';
 import './PathfindingVisualizer.css';
 
-const START_NODE_ROW = 10;
-const START_NODE_COL = 15;
-const FINISH_NODE_ROW = 10;
-const FINISH_NODE_COL = 35;
+const START_NODE_ROW = 8;
+const START_NODE_COL = 19;
+const FINISH_NODE_ROW = 18;
+const FINISH_NODE_COL = 40;
 
 export default class PathfindingVisualizer extends Component {
    //constructor where default state is specified: empty grid and mouseIsPressed set to false
@@ -41,8 +41,8 @@ export default class PathfindingVisualizer extends Component {
     this.setState({mouseIsPressed: false});
   }
 
-  //method to animate dijkstra
-  animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
+  //method to animate algorithms
+  animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder) {
     //if all visited nodes have been animated, animate the shortest path and finish
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
@@ -74,7 +74,7 @@ export default class PathfindingVisualizer extends Component {
 
   //method that is called in render
   //sets start node, finish node, visited nodes, and nodes in shortest path
-  //calls animateDijkstra method
+  //calls animateAlgorithm method
   visualizeDijkstra() {
     const {grid} = this.state;
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
@@ -82,7 +82,20 @@ export default class PathfindingVisualizer extends Component {
     //how visited nodes and nodes in shortest path are retrieved is specified in dijkstra component
     const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
+  }
+
+
+  //method that is called in render
+  //sets start node, finish node, visited nodes, and nodes in shortest path
+  //calls animateAlgorithm method
+  visualizeAStar() {
+    const {grid} = this.state;
+    const startNode = grid[START_NODE_ROW][START_NODE_COL];
+    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+    const visitedNodesInOrder = astar(grid, startNode, finishNode);
+    const nodesInShortestPathOrder = getNodesInShortestPathOrderA(finishNode);
+    this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
   }
 
   //this is like the main method for jsx
@@ -92,11 +105,30 @@ export default class PathfindingVisualizer extends Component {
 
     return (
       <>
-        {/*Button that calls the visualizeDijkstra method*/}
+        <h1>Pathfinding Algorithms</h1>
+        <h2>Details:</h2>
+        <ul>
+            <li>Unweighted graph</li>
+            <li>Fixed start and finish points</li>
+            <li>Manhattan distance</li>
+            <li>Create walls by clicking and dragging</li>
+            <li>Refresh to repeat</li>
+        </ul>
+
+        {/*button that calls the visualizeDijkstra method*/}
         <button onClick={() => this.visualizeDijkstra()}>
           Visualize Dijkstra's Algorithm
         </button>
-        {/*Sets up grid in HTML so that it can be visualized with css*/}
+        <button onClick={() => this.visualizeAStar()}>
+          A* Algorithm
+        </button>
+        <button onClick={() => this.visualizeDijkstra()}>
+          DFS Algorithm
+        </button>
+        <button onClick={() => this.visualizeDijkstra()}>
+          BFS Algorithm
+        </button>
+        {/*sets up grid in HTML so that it can be visualized with css*/}
         <div className="grid">
           {grid.map((row, rowIdx) => {
             return (
@@ -152,9 +184,12 @@ const createNode = (col, row) => {
     isStart: row === START_NODE_ROW && col === START_NODE_COL,
     isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
     distance: Infinity,
+    onOpen:false,
     isVisited: false,
     isWall: false,
     previousNode: null,
+    heuristic: Math.abs(FINISH_NODE_ROW-row)+Math.abs(FINISH_NODE_COL-col),
+    gCost:0,
   };
 };
 
