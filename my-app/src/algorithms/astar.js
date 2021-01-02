@@ -42,7 +42,7 @@ export function astar(grid, startNode, finishNode){
         //update neighbors of current node
         updateNeighbors(currentNode,grid);
     }
-   // return closedList;
+    return closedList;
 }
 
 //looks around current node to add correct neighbors to open list
