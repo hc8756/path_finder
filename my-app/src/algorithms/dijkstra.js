@@ -6,6 +6,7 @@ export function dijkstra(grid, startNode, finishNode) {
     startNode.distance = 0;
     //fill unvisted nodes with all the nodes on grid
     const unvisitedNodes = getAllNodes(grid);
+
     //while unvisited nodes exist
     while (!!unvisitedNodes.length) {
 

@@ -37,12 +37,15 @@ export default class PathfindingVisualizer extends Component {
     if (!this.state.mouseIsPressed) return;
     const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
     this.setState({grid: newGrid});
-  }
+  } 
 
   handleMouseUp() {
-    this.setState({mouseIsPressed: false});
+    this.setState({
+        mouseIsPressed: false,
+    });
   }
 
+ 
   //method to animate algorithms
   animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder) {
     //if all visited nodes have been animated, animate the shortest path and finish
@@ -152,7 +155,7 @@ export default class PathfindingVisualizer extends Component {
             return (
               <div key={rowIdx}>
                 {row.map((node, nodeIdx) => {
-                  const {row, col, isFinish, isStart, isWall} = node;
+                  const {row, col, isFinish, isStart, isWall,isWeighted} = node;
                   return (
                     <Node
                       key={nodeIdx}
@@ -160,11 +163,13 @@ export default class PathfindingVisualizer extends Component {
                       isFinish={isFinish}
                       isStart={isStart}
                       isWall={isWall}
+                      isWeighted={isWeighted}
                       mouseIsPressed={mouseIsPressed}
                       onMouseDown={(row, col) => this.handleMouseDown(row, col)}
                       onMouseEnter={(row, col) =>
                         this.handleMouseEnter(row, col)
                       }
+                    
                       onMouseUp={() => this.handleMouseUp()}
                       row={row}></Node>
                   );
@@ -205,6 +210,7 @@ const createNode = (col, row) => {
     onOpen:false,
     isVisited: false,
     isWall: false,
+    isWeighted: false,
     previousNode: null,
     heuristic: Math.abs(FINISH_NODE_ROW-row)+Math.abs(FINISH_NODE_COL-col),
     gCost:0,
@@ -222,3 +228,15 @@ const getNewGridWithWallToggled = (grid, row, col) => {
   newGrid[row][col] = newNode;
   return newGrid;
 };
+
+//method that helps update grid with weight
+/*const getNewGridWithWeightToggled = (grid, row, col) => {
+    const newGrid = grid.slice();
+    const node = newGrid[row][col];
+    const newNode = {
+      ...node,
+      isWeighted: !node.isWeighted,
+    };
+    newGrid[row][col] = newNode;
+    return newGrid;
+  };*/

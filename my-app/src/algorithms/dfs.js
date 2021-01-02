@@ -14,7 +14,7 @@ export function dfs(grid, startNode, finishNode){
 
         //get neighbors of the current node
         const neighbors= getNeighbors(currentNode,grid);
-        if(neighbors.length==0){
+        if(neighbors.length===0){
             return visited;
         }
         //for each neighbor,
@@ -40,7 +40,6 @@ function getNeighbors(node,grid){
     //remove items from list that is a wall or visited
     for(let i=0;i<list.length;i++){
         if(list[i].isWall || list[i].isVisited){
-            console.log("item has been removed");
             list.splice(i,1);
             i=i-1;
         }

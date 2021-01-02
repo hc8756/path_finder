@@ -7,15 +7,10 @@ export function astar(grid, startNode, finishNode){
     startNode.distance= startNode.gCost+startNode.heuristic;
     openList.push(startNode);  
     
-    //var test= 10;
-    //while(test===10){
     while(!!openList.length){
         //check if the finish node is in open list and end if true
         for(let i=0;i<openList.length;i++){
             openList[i].onOpen=true;
-            if(openList[i].isFinish){
-                return closedList;
-            }
         }
 
         //find the node on openlist with smallest distance
@@ -27,45 +22,33 @@ export function astar(grid, startNode, finishNode){
         }
         //set to current node
         const currentNode=openList[currentNodeIndex];
-
-        //if current node distance is infinity, there is no path
-        if(currentNode.distance===Infinity) return closedList;
         //if current node is a wall, just skip it
         if (currentNode.isWall) continue;
+        //if current node distance is infinity, there is no path
+        if(currentNode.distance===Infinity) return closedList;
+        
 
-        //set current node visited to true and push to closedlist
+        //set current node visited to true and push to closedlist and remove from openlist
         currentNode.isVisited=true;
         closedList.push(currentNode);
+        openList.splice(currentNodeIndex,1);
         
-        //update the openlist
-        updateOpenList(currentNode,grid,openList);
-        //update neighbors of current node
-        updateNeighbors(currentNode,grid);
+        //update the openlist with neighbors of the current node
+        var neighbors=updateNeighbors(currentNode,grid);
+        for(let i=0;i<neighbors.length;i++){
+            if(!neighbors[i].onOpen){
+                openList.push(neighbors[i]);
+            }
+            if(neighbors[i]==finishNode){
+                return closedList;
+            }
+        }
     }
     return closedList;
 }
 
-//looks around current node to add correct neighbors to open list
-function updateOpenList(node,grid,list){
-    //get col and row values of node
-    const {col, row} = node;
-    //push top,bottom,left,right negibors into open list
-    if (row > 0 && grid[row - 1][col].onOpen===false) list.push(grid[row - 1][col]);
-    if (row < grid.length - 1 && grid[row + 1][col].onOpen===false) list.push(grid[row + 1][col]);
-    if (col > 0 && grid[row][col - 1].onOpen===false) list.push(grid[row][col - 1]);
-    if (col < grid[0].length - 1 && grid[row][col + 1].onOpen===false) list.push(grid[row][col + 1]);
-
-    //remove items from list that have been visited or is a wall
-    for(let i=0;i<list.length;i++){
-        if(list[i].isVisited || list[i].isWall){
-            console.log("item has been removed");
-            list.splice(i,1);
-            i=i-1;
-        }
-    } 
-}
-
-//update properties of current node's neighbors
+//for some reason final node isnt being added when there are two squares around it
+//update properties of current node's neighbors and return
 function updateNeighbors(node,grid) {
     //get neighboring nodes that are unvisited
     const unvisitedNeighbors = [];
@@ -79,12 +62,11 @@ function updateNeighbors(node,grid) {
 
     //get rid of neighbors that were visited or a wall
     for(let i=0;i<unvisitedNeighbors.length;i++){
-        if(unvisitedNeighbors[i].isVisited===true || unvisitedNeighbors[i].isWall===true){
+        if(unvisitedNeighbors[i].isVisited || unvisitedNeighbors[i].isWall){
             unvisitedNeighbors.splice(i,1);
             i=i-1;
         }
     }
-
     //and for each of them, add 1 to their gcost (cost of u to v on unweighted graph) and update distance
     //and set current node to previous node 
     for (const neighbor of unvisitedNeighbors) {
@@ -94,6 +76,7 @@ function updateNeighbors(node,grid) {
             neighbor.distance=neighbor.gCost+neighbor.heuristic;
         }
     }
+    return unvisitedNeighbors;
 }
 
 // Backtracks from the finishNode to find the shortest path.

@@ -12,6 +12,10 @@
   .node-start {
     background-color: green;
   }
+
+  .node-weighted{
+    background-color: purple;
+  }
   
   .node-visited {
     animation-name: visitedAnimation;
