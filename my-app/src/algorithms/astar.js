@@ -42,7 +42,7 @@ export function astar(grid, startNode, finishNode){
         //update neighbors of current node
         updateNeighbors(currentNode,grid);
     }
-    return closedList;
+   // return closedList;
 }
 
 //looks around current node to add correct neighbors to open list
@@ -98,7 +98,7 @@ function updateNeighbors(node,grid) {
 
 // Backtracks from the finishNode to find the shortest path.
 // Only works when called *after* the astar method above.
-export function getNodesInShortestPathOrderA(finishNode) {
+export function getNodesInShortestPathOrderB(finishNode) {
     const nodesInShortestPathOrder = [];
     let currentNode = finishNode;
     while (currentNode !== null) {

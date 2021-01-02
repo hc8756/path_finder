@@ -1,5 +1,5 @@
 //function is passed grid with start and finish nodes
-export function dijkstra(grid, startNode, finishNode) {
+export function bfs(grid, startNode, finishNode) {
     //visited nodes initially set to empty array 
     const visitedNodesInOrder = [];
     //set the startNode distance from infinity to zero
@@ -77,7 +77,7 @@ export function dijkstra(grid, startNode, finishNode) {
   
   // Backtracks from the finishNode to find the shortest path.
   // Only works when called *after* the dijkstra method above.
-  export function getNodesInShortestPathOrderA(finishNode) {
+  export function getNodesInShortestPathOrderD(finishNode) {
     const nodesInShortestPathOrder = [];
     let currentNode = finishNode;
     while (currentNode !== null) {

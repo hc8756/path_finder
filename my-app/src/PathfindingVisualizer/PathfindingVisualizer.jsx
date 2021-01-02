@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import Node from './Node/Node';
-import {dijkstra, getNodesInShortestPathOrder} from '../algorithms/dijkstra';
-import {astar, getNodesInShortestPathOrderA} from '../algorithms/astar';
+import {dijkstra, getNodesInShortestPathOrderA} from '../algorithms/dijkstra';
+import {astar, getNodesInShortestPathOrderB} from '../algorithms/astar';
+import {dfs, getNodesInShortestPathOrderC} from '../algorithms/dfs';
+import {bfs, getNodesInShortestPathOrderD} from '../algorithms/bfs';
 import './PathfindingVisualizer.css';
 
 const START_NODE_ROW = 8;
@@ -72,7 +74,7 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-  //method that is called in render
+  //methods called in render
   //sets start node, finish node, visited nodes, and nodes in shortest path
   //calls animateAlgorithm method
   visualizeDijkstra() {
@@ -81,22 +83,38 @@ export default class PathfindingVisualizer extends Component {
     const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
     //how visited nodes and nodes in shortest path are retrieved is specified in dijkstra component
     const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+    const nodesInShortestPathOrder = getNodesInShortestPathOrderA(finishNode);
     this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
   }
 
-
-  //method that is called in render
-  //sets start node, finish node, visited nodes, and nodes in shortest path
-  //calls animateAlgorithm method
   visualizeAStar() {
     const {grid} = this.state;
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
     const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
     const visitedNodesInOrder = astar(grid, startNode, finishNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrderA(finishNode);
+    const nodesInShortestPathOrder = getNodesInShortestPathOrderB(finishNode);
     this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
   }
+
+  visualizeDFS() {
+    const {grid} = this.state;
+    const startNode = grid[START_NODE_ROW][START_NODE_COL];
+    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+    const visitedNodesInOrder = dfs(grid, startNode, finishNode);
+    const nodesInShortestPathOrder = getNodesInShortestPathOrderC(finishNode);
+    this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
+  }
+
+  visualizeBFS() {
+    const {grid} = this.state;
+    const startNode = grid[START_NODE_ROW][START_NODE_COL];
+    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+    const visitedNodesInOrder = bfs(grid, startNode, finishNode);
+    const nodesInShortestPathOrder = getNodesInShortestPathOrderD(finishNode);
+    this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
+  }
+
+
 
   //this is like the main method for jsx
   //basically HTML with JavaScript in curly braces
@@ -108,7 +126,7 @@ export default class PathfindingVisualizer extends Component {
         <h1>Pathfinding Algorithms</h1>
         <h2>Details:</h2>
         <ul>
-            <li>Unweighted graph</li>
+            <li>Unweighted graph (Dijkstra and BFS are identical)</li>
             <li>Fixed start and finish points</li>
             <li>Manhattan distance</li>
             <li>Create walls by clicking and dragging</li>
@@ -117,15 +135,15 @@ export default class PathfindingVisualizer extends Component {
 
         {/*button that calls the visualizeDijkstra method*/}
         <button onClick={() => this.visualizeDijkstra()}>
-          Visualize Dijkstra's Algorithm
+          Dijkstra's Algorithm
         </button>
         <button onClick={() => this.visualizeAStar()}>
           A* Algorithm
         </button>
-        <button onClick={() => this.visualizeDijkstra()}>
+        <button onClick={() => this.visualizeDFS()}>
           DFS Algorithm
         </button>
-        <button onClick={() => this.visualizeDijkstra()}>
+        <button onClick={() => this.visualizeBFS()}>
           BFS Algorithm
         </button>
         {/*sets up grid in HTML so that it can be visualized with css*/}
