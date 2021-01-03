@@ -31,6 +31,7 @@ export function bfs(grid, startNode, finishNode) {
       //update visited neighbors
       updateUnvisitedNeighbors(closestNode, grid);
     }
+    return visitedNodesInOrder
   }
   
   //sort nodes in unvisited from smallest to largest from the start

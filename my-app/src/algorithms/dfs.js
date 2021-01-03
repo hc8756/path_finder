@@ -6,11 +6,12 @@ export function dfs(grid, startNode, finishNode){
     while(!!stack.length){
         //current node is top of the stack
         const currentNode=stack.pop();
+        if (currentNode.isWall) continue;
         //mark as visited and add to the visited array
         visited.push(currentNode);
         currentNode.isVisited=true;
-        //end if current nod is the finish node
-        if(currentNode.isFinish) return visited;
+        //end if current node is the finish node
+        if(currentNode===finishNode) return visited;
 
         //get neighbors of the current node
         const neighbors= getNeighbors(currentNode,grid);
@@ -26,7 +27,7 @@ export function dfs(grid, startNode, finishNode){
     return visited;
 }
 
-//looks around current node to add correct neighbors to open list
+//looks around passed node and return neighbors after setting node to parent
 function getNeighbors(node,grid){
     const list=[];
     //get col and row values of node
@@ -39,7 +40,7 @@ function getNeighbors(node,grid){
 
     //remove items from list that is a wall or visited
     for(let i=0;i<list.length;i++){
-        if(list[i].isWall || list[i].isVisited){
+        if(list[i].isVisited){
             list.splice(i,1);
             i=i-1;
         }
