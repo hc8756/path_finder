@@ -2,6 +2,7 @@
 //this function returns closedlist (visited nodes)
 //the open list is like a list of candidates for current node
 export function astar(grid, startNode, finishNode){
+
     const openList=[];
     const closedList=[];
     startNode.distance= startNode.gCost+startNode.heuristic;
@@ -25,15 +26,23 @@ export function astar(grid, startNode, finishNode){
         //update the openlist with neighbors of the current node
         var neighbors=unvisitedNeighbors(currentNode,grid);
         for(let i=0;i<neighbors.length;i++){
-            if(neighbors[i].previousNode===null || currentNode.gCost+1<neighbors[i].gCost ){
-            neighbors[i].previousNode=currentNode;
-            neighbors[i].gCost = currentNode.gCost + 1;
-            neighbors[i].distance=neighbors[i].gCost+neighbors[i].heuristic;}
+            if(neighbors[i].isWeighted){
+                if(neighbors[i].previousNode===null || currentNode.gCost+5<neighbors[i].gCost ){
+                neighbors[i].previousNode=currentNode;
+                neighbors[i].gCost = currentNode.gCost + 5;
+                neighbors[i].distance=neighbors[i].gCost+neighbors[i].heuristic;}
+            }
+            else{
+                if(neighbors[i].previousNode===null || currentNode.gCost+1<neighbors[i].gCost ){
+                    neighbors[i].previousNode=currentNode;
+                    neighbors[i].gCost = currentNode.gCost + 1;
+                    neighbors[i].distance=neighbors[i].gCost+neighbors[i].heuristic;}
+            }
 
             if(!openList.includes(neighbors[i])){
                 openList.push(neighbors[i]);
             }
-            if(neighbors[i]==finishNode){
+            if(neighbors[i]===finishNode){
                 return closedList;
             }
         }

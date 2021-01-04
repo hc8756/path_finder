@@ -6,46 +6,65 @@ import {dfs, getNodesInShortestPathOrderC} from '../algorithms/dfs';
 import {bfs, getNodesInShortestPathOrderD} from '../algorithms/bfs';
 import './PathfindingVisualizer.css';
 
-const START_NODE_ROW = 8;
-const START_NODE_COL = 19;
-const FINISH_NODE_ROW = 18;
-const FINISH_NODE_COL = 40;
+const START_NODE_ROW = 0;
+const START_NODE_COL = 0;
+const FINISH_NODE_ROW = 19;
+const FINISH_NODE_COL = 49;
 
 export default class PathfindingVisualizer extends Component {
-   //constructor where default state is specified: empty grid and mouseIsPressed set to false
+   //constructor where default state is specified: empty grid and mouseIsPressed+weightsOn set to false
     constructor() {
     super();
     this.state = {
       grid: [],
       mouseIsPressed: false,
+      weightsOn: false,
     };
   }
 
   //initializes state of grid
   componentDidMount() {
     const grid = getInitialGrid();
+    window.addEventListener('keyDown', this.handleKeyDown.bind(this));
     this.setState({grid});
   }
   
+
   //methods that update grid state based on mouse actions
   handleMouseDown(row, col) {
-    const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
-    this.setState({grid: newGrid, mouseIsPressed: true});
+    if (!this.state.weightsOn){
+        const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+        this.setState({grid: newGrid, mouseIsPressed: true, weightsOn:false});
+    }
+    else {
+        const newGrid = getNewGridWithWeightToggled(this.state.grid, row, col);
+        this.setState({grid: newGrid, mouseIsPressed: true, weightsOn:true});
+    }
   }
 
   handleMouseEnter(row, col) {
     if (!this.state.mouseIsPressed) return;
-    const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
-    this.setState({grid: newGrid});
+
+    else if(!this.state.weightsOn){
+        const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+        this.setState({grid: newGrid});
+    }
+    else if (this.state.weightsOn){
+        const newGrid = getNewGridWithWeightToggled(this.state.grid, row, col);
+        this.setState({grid: newGrid});
+    }
+    
   } 
 
   handleMouseUp() {
-    this.setState({
-        mouseIsPressed: false,
-    });
+    this.setState({mouseIsPressed: false,});
+  }
+  
+  handleKeyDown(){
+      if(this.state.weightsOn){this.setState({weightsOn: false});}
+      else{this.setState({weightsOn: true});}
   }
 
- 
   //method to animate algorithms
   animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder) {
     //if all visited nodes have been animated, animate the shortest path and finish
@@ -117,8 +136,6 @@ export default class PathfindingVisualizer extends Component {
     this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
   }
 
-
-
   //this is like the main method for jsx
   //basically HTML with JavaScript in curly braces
   render() {
@@ -129,14 +146,16 @@ export default class PathfindingVisualizer extends Component {
         <h1>Pathfinding Algorithms</h1>
         <h2>Details:</h2>
         <ul>
-            <li>Unweighted graph (Dijkstra and BFS are identical)</li>
             <li>Fixed start and finish points</li>
-            <li>Manhattan distance</li>
-            <li>Create walls by clicking and dragging</li>
+            <li>Manhattan distance, no diagonals</li>
+            <li>Create walls or weights by clicking and dragging</li>
             <li>Refresh to repeat</li>
         </ul>
 
         {/*button that calls the visualizeDijkstra method*/}
+        <button onClick={() => this.handleKeyDown()}>
+          Walls/Weights Toggle
+        </button>
         <button onClick={() => this.visualizeDijkstra()}>
           Dijkstra's Algorithm
         </button>
@@ -166,10 +185,7 @@ export default class PathfindingVisualizer extends Component {
                       isWeighted={isWeighted}
                       mouseIsPressed={mouseIsPressed}
                       onMouseDown={(row, col) => this.handleMouseDown(row, col)}
-                      onMouseEnter={(row, col) =>
-                        this.handleMouseEnter(row, col)
-                      }
-                    
+                      onMouseEnter={(row, col) =>this.handleMouseEnter(row, col)}
                       onMouseUp={() => this.handleMouseUp()}
                       row={row}></Node>
                   );
@@ -223,19 +239,22 @@ const getNewGridWithWallToggled = (grid, row, col) => {
   const newNode = {
     ...node,
     isWall: !node.isWall,
+    isWeighted: false,
   };
   newGrid[row][col] = newNode;
   return newGrid;
 };
 
 //method that helps update grid with weight
-/*const getNewGridWithWeightToggled = (grid, row, col) => {
+const getNewGridWithWeightToggled = (grid, row, col) => {
     const newGrid = grid.slice();
     const node = newGrid[row][col];
     const newNode = {
       ...node,
       isWeighted: !node.isWeighted,
+      isWall: false,
     };
     newGrid[row][col] = newNode;
     return newGrid;
-  };*/
+  };
+
