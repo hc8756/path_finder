@@ -183,45 +183,51 @@ export default class PathfindingVisualizer extends Component {
 
     return (
       <>
-        <h1>Pathfinding Algorithms</h1>
-        <h2>Details:</h2>
-        <ul>
-            <li>Manhattan distance, no diagonals</li>
-            <li>BFS and DFS algorithms will disregard node weight</li>
-            <li>Create walls or weights by clicking and dragging</li>
-        </ul>
+        <div className="intro">
+          <h1>Pathfinding Algorithms</h1>
+          <ul>
+              <li>Manhattan distance, no diagonals</li>
+              <li>BFS and DFS algorithms will disregard node weight</li>
+              <li>Create walls (black) or weights (purple) by clicking and dragging</li>
+          </ul>
+          <div className="input">
+            <div>
+            <label>Starting Row (0~19): </label>
+            <input type="number" onChange={this.setStartRow} value={ Number(this.state.START_NODE_ROW).toString()} />
+            <label>Starting Column (0~49): </label>
+            <input type="number" onChange={this.setStartCol} value={ Number(this.state.START_NODE_COL).toString()} />
+            </div>
 
-        {/*button that calls the visualizeDijkstra method*/}
-        <button disabled={this.state.buttonsDisabled} onClick={() => this.handleKeyDown()}>
-          Walls/Weights Toggle
-        </button>
-        <button disabled={this.state.buttonsDisabled} onClick={() => this.visualizeDijkstra()}>
-          Dijkstra's Algorithm
-        </button>
-        <button disabled={this.state.buttonsDisabled} onClick={() => this.visualizeAStar()}>
-          A* Algorithm
-        </button>
-        <button disabled={this.state.buttonsDisabled} onClick={() => this.visualizeDFS()}>
-          DFS Algorithm
-        </button>
-        <button disabled={this.state.buttonsDisabled} onClick={() => this.visualizeBFS()}>
-          BFS Algorithm
-        </button>
-        <button onClick={() => this.refresh()}>
-          Reset
-        </button>
+            <div>
+            <label>Finishing Row (0~19): </label>
+            <input type="number" onChange={this.setFinishRow} value={ Number(this.state.FINISH_NODE_ROW).toString()} />
+            <label>Finishing Column (0~49): </label>
+            <input type="number" onChange={this.setFinishCol} value={ Number(this.state.FINISH_NODE_COL).toString()} />
+            </div>
+          </div>
+          <div className="buttons">
+          {/*button that calls the visualizeDijkstra method*/}
+          <button disabled={this.state.buttonsDisabled} onClick={() => this.handleKeyDown()}>
+            Walls/Weights Toggle
+          </button>
+          <button disabled={this.state.buttonsDisabled} onClick={() => this.visualizeDijkstra()}>
+            Dijkstra's Algorithm
+          </button>
+          <button disabled={this.state.buttonsDisabled} onClick={() => this.visualizeAStar()}>
+            A* Algorithm
+          </button>
+          <button disabled={this.state.buttonsDisabled} onClick={() => this.visualizeDFS()}>
+            DFS Algorithm
+          </button>
+          <button disabled={this.state.buttonsDisabled} onClick={() => this.visualizeBFS()}>
+            BFS Algorithm
+          </button>
+          <button onClick={() => this.refresh()}>
+            Reset
+          </button>
+          </div>
 
-        <div className="input">
-          <label>Starting Row (0~19): </label>
-          <input type="number" onChange={this.setStartRow} value={ Number(this.state.START_NODE_ROW).toString()} />
-          <label>Starting Column (0~49): </label>
-          <input type="number" onChange={this.setStartCol} value={ Number(this.state.START_NODE_COL).toString()} />
           
-          <label>Finishing Row (0~19): </label>
-          <input type="number" onChange={this.setFinishRow} value={ Number(this.state.FINISH_NODE_ROW).toString()} />
-          <label>Finishing Column (0~49): </label>
-          <input type="number" onChange={this.setFinishCol} value={ Number(this.state.FINISH_NODE_COL).toString()} />
-
         </div>
 
         {/*sets up grid in HTML so that it can be visualized with css*/}
