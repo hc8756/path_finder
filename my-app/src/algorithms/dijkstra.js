@@ -44,10 +44,16 @@ export function dijkstra(grid, startNode, finishNode) {
   function updateUnvisitedNeighbors(node, grid) {
     //get neighboring nodes that are unvisited
     const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
-    //and for each of them, add 1 to their distance (cost of u to v on unweighted graph)
+    //and for each of them, add weight to their distance (cost of u to v on unweighted graph)
     //and set current node to previous node 
     for (const neighbor of unvisitedNeighbors) {
-      neighbor.distance = node.distance + 1;
+      if(neighbor.isWeighted){
+        neighbor.distance = node.distance + 5;
+      }
+      else{
+        neighbor.distance = node.distance + 1;
+      }
+      
       neighbor.previousNode = node;
     }
   }

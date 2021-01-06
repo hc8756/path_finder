@@ -5,6 +5,7 @@ export function astar(grid, startNode, finishNode){
 
     const openList=[];
     const closedList=[];
+    if(startNode===finishNode){return closedList;}
     startNode.distance= startNode.gCost+startNode.heuristic;
     openList.push(startNode);  
     
